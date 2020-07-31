@@ -1,10 +1,9 @@
 from collections import Counter
 
-import archive
+import knowknow
 import matplotlib.pyplot as plt
 import numpy
 import seaborn
-from scipy.spatial.distance import pdist, squareform
 
 plt.style.use('seaborn-whitegrid')
 
@@ -42,7 +41,7 @@ def badass_heatmap(whats, fnargs=[], RANGE=None,
                 if y < start_year or y > MAXYEAR:
                     return nanval
 
-                myiy = archive.make_cross({"fy": y, dtype: what})
+                myiy = knowknow.make_cross({"fy": y, dtype: what})
                 return cnt[ify][myiy]
 
             year_l = [get_val(y) for y in range(start_year, start_year + RANGE)]
@@ -67,7 +66,7 @@ def badass_heatmap(whats, fnargs=[], RANGE=None,
                 if y < start_year or y > MAXYEAR:
                     return nanval
 
-                myiy = archive.make_cross({"fy": y, dtype: what})
+                myiy = knowknow.make_cross({"fy": y, dtype: what})
                 return cnt[ify][myiy]
 
             year_l = [get_val(y) for y in range(start_year, start_year + RANGE)]
@@ -142,7 +141,7 @@ def badass_heatmap(whats, fnargs=[], RANGE=None,
             range(MAXYEAR - RANGE, MAXYEAR, 1)
         )
 
-    archive.save_figure("Top 100 lifespans (%s)" % ", ".join([database_name, dtype] + fnargs))
+    knowknow.save_figure("Top 100 lifespans (%s)" % ", ".join([database_name, dtype] + fnargs))
     plt.show()
 
     print(", ".join("%d. %s" % (i, whats[seq[i]][0]) for i in range(len(whats))))
@@ -150,10 +149,10 @@ def badass_heatmap(whats, fnargs=[], RANGE=None,
 
 dtype = 't'
 database_name = "sociology-jstor-basicall"
-ify = archive.comb(dtype, 'fy')  # TODO: what is ify?
+ify = knowknow.comb(dtype, 'fy')  # TODO: what is ify?
 
-cnt = archive.get_cnt('%s.doc' % database_name, ['fy', ify, dtype])  # TODO
-ysum = archive.load_variable('%s.%s.ysum' % (database_name, dtype))  # TODO
+cnt = knowknow.get_cnt('%s.doc' % database_name, ['fy', ify, dtype])  # TODO
+ysum = knowknow.load_variable('%s.%s.ysum' % (database_name, dtype))  # TODO
 
 # TODO: understand why it's needed
 #  I think it loads some .fy and .ysum files. What is stored there is unclear
@@ -189,7 +188,7 @@ for decade in range(1950, 2020, 10):
     whatskeep = set()
     i = 0
     while len(whatskeep) < 100 and i < len(whats):
-        whatskeep.add(archive.make_cross(ta=whats[i]))
+        whatskeep.add(knowknow.make_cross(ta=whats[i]))
         i += 1
     whatskeep = list(whatskeep)
 

@@ -3,6 +3,9 @@ Functions that don't need state of knowknow engine.
 Mostly are meant to generate empty/autofilled data structures or for type transformation.
 """
 from collections import namedtuple
+from pathlib import Path
+import requests
+from logzero import logger
 
 
 def comb(x, y):
@@ -71,8 +74,34 @@ def named_tupelize(d: dict, ctype: str):
         if type(k) in [tuple, list]:
             return make_cross(dict(zip(keys, k)))
         elif len(keys) == 1:
+            # TODO: where this hack is used?
+            logger.warning(f'DoIt function in named_tupelize uses len(1) hack. ctype: {ctype}, '
+                           f'd: {d}, curr_key {k}')
             return make_cross({keys[0]: k})
         else:
             raise Exception(f"Cannot transform {k} into a named tuple with keys {keys}")
 
     return {doit(k): v for k, v in d.items()}
+
+
+class VariableNotFound(Exception):
+    pass
+
+
+def download_file(url, outfn):
+    url = str(url)
+    outfn = str(outfn)
+    Path(outfn).parent.mkdir(exist_ok=True)
+    logger.info(f"Beginning download, {url}")
+    # NOTE the stream=True parameter below
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(outfn, 'wb') as f:
+            for i, chunk in enumerate(r.iter_content(chunk_size=8192)):
+                if i % 1000 == 0 and i:
+                    logger.info('%0.2f MB downloaded...' % (i * 8192 / 1e6))
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                # if chunk:
+                f.write(chunk)
+    return outfn

@@ -172,7 +172,7 @@ def download_file(url, outfn):
 def badass_heatmap(whats, cnt, dtype, ysum, ify, fnargs=[], RANGE=None,
                    markers={}, markersize=50, align='left',
                    proportional=False, MAXYEAR=2018,
-                   **kwargs):
+                   database_name=None, **kwargs):
     whats = list(whats)
 
     all_years = []
