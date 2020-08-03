@@ -147,59 +147,85 @@ def badass_heatmap(whats, fnargs=[], RANGE=None,
     print(", ".join("%d. %s" % (i, whats[seq[i]][0]) for i in range(len(whats))))
 
 
-dtype = 't'
-database_name = "sociology-jstor-basicall"
-ify = knowknow.comb(dtype, 'fy')  # TODO: what is ify?
+if __name__ == '__main__':
+    dtype = 'c'
+    # database_name = "sociology-jstor-basical"
+    database_name = 'sociology-wos'
+    basedir = '/home/ishsonya/workspace/knowknowlib/example'
+    engine = knowknow.KnowKnow(BASEDIR=basedir, NB_DIR=basedir)
+    ify = knowknow.comb(dtype, 'fy')  # TODO: what is ify?
 
-cnt = knowknow.get_cnt('%s.doc' % database_name, ['fy', ify, dtype])  # TODO
-ysum = knowknow.load_variable('%s.%s.ysum' % (database_name, dtype))  # TODO
+    cnt = engine.get_cnt(name='%s.doc' % database_name, keys=['fy', ify, dtype])  # TODO
+    ysum = engine.load_variable('%s.%s.ysum' % (database_name, dtype))  # TODO
 
-# TODO: understand why it's needed
-#  I think it loads some .fy and .ysum files. What is stored there is unclear
-"""Loaded keys: dict_keys(['fy', 'fy.t', 't'])
-Available keys: ['c', 'c.c', 'c.c.fy', 'c.fa', 'c.fj', 'c.fy', 'c.t', 'fa', 'fa.fj.fy', 'fj', 'fj.fy', 'fj.t', 'fy', 'fy.t', 't', 't.t']
-list(ysum)[:5]= ['relationship', 'multiple', 'protestant', 'religious', 'thesis']
-Counter(dict(cnt[dtype])).most_common(3) = [(t(t='social'), 25329), (t(t='one'), 20959), (t(t='also'), 20860),]
-"""
+    # TODO: understand why it's needed
+    #  I think it loads some .fy and .ysum files. What is stored there is unclear
+    """Loaded keys: dict_keys(['fy', 'fy.t', 't'])
+    Available keys: ['c', 'c.c', 'c.c.fy', 'c.fa', 'c.fj', 'c.fy', 'c.t', 'fa', 'fa.fj.fy', 'fj', 'fj.fy', 'fj.t', 'fy', 'fy.t', 't', 't.t']
+    list(ysum)[:5]= ['relationship', 'multiple', 'protestant', 'religious', 'thesis']
+    Counter(dict(cnt[dtype])).most_common(3) = [(t(t='social'), 25329), (t(t='one'), 20959), (t(t='also'), 20860),]
+    """
 
-all_years = numpy.array([[1, 2], [3, 4]])
+    all_years = numpy.array([[1, 2], [3, 4]])
 
-whats = [(x,) for x in ysum if (50 < ysum[x]['total'] < 1000)]
-badass_heatmap(whats, ['random', 'raw'], proportional='rows', align='right', RANGE=40, MAXYEAR=2000)
+    whats = [(x,) for x in ysum if (50 < ysum[x]['total'] < 1000)]
+    engine.badass_heatmap(whats=whats,
+                          fnargs=['random', 'raw'],
+                          proportional='rows',
+                          align='right',
+                          RANGE=40,
+                          MAXYEAR=2000,
+                          cnt=cnt,
+                          dtype=dtype,
+                          ysum=ysum,
+                          ify=ify,
+                          database_name=database_name)
 
-whats = Counter(dict(cnt[dtype].items())).most_common(150)[50:100]
-whats = [x[0] for x in whats]
-badass_heatmap(whats, ['most_cits', 'raw'], align='right')
+    whats = Counter(dict(cnt[dtype].items())).most_common(150)[50:100]
+    whats = [x[0] for x in whats]
+    engine.badass_heatmap(whats=whats,
+                          fnargs=['most_cits', 'raw'],
+                          align='right',
+                          cnt=cnt,
+                          dtype=dtype,
+                          ysum=ysum,
+                          ify=ify,
+                          database_name=database_name)
 
-# aim: to sort by something else interesting.
-# I chose date of publication!!
+    # aim: to sort by something else interesting.
+    # I chose date of publication!!
 
-for decade in range(1950, 2020, 10):
+    for decade in range(1950, 2020, 10):
 
-    names = list(cnt[ify].keys())
-    names = [getattr(x, dtype) for x in names]
-    names = [x for x in names if x in ysum]
+        names = list(cnt[ify].keys())
+        names = [getattr(x, dtype) for x in names]
+        names = [x for x in names if x in ysum]
 
-    whats = sorted(cnt[ify], key=lambda x: -ysum[getattr(x, dtype)]['total'] if getattr(x, dtype) in ysum else 0)
-    whats = [x.ta for x in whats]
-    whats = [x for x in whats if (x in ysum) and (decade <= ysum[x]['maxcounty'] < decade + 10)]
-    print(len(whats), "total")
+        whats = sorted(cnt[ify], key=lambda x: -ysum[getattr(x, dtype)]['total'] if getattr(x, dtype) in ysum else 0)
+        whats = [x.ta for x in whats]
+        whats = [x for x in whats if (x in ysum) and (decade <= ysum[x]['maxcounty'] < decade + 10)]
+        print(len(whats), "total")
 
-    whatskeep = set()
-    i = 0
-    while len(whatskeep) < 100 and i < len(whats):
-        whatskeep.add(knowknow.make_cross(ta=whats[i]))
-        i += 1
-    whatskeep = list(whatskeep)
+        whatskeep = set()
+        i = 0
+        while len(whatskeep) < 100 and i < len(whats):
+            whatskeep.add(knowknow.make_cross(ta=whats[i]))
+            i += 1
+        whatskeep = list(whatskeep)
 
-    cmap = seaborn.color_palette("cubehelix", 50)
-    badass_heatmap(
-        whatskeep,
-        ['top_cit_%ss' % decade, 'raw'],
-        RANGE=None,
-        markers={x.ta: {decade + 10: "<"} for x in whatskeep},
-        markersize=30,
-        cmap=cmap
-    )
+        cmap = seaborn.color_palette("cubehelix", 50)
+        engine.badass_heatmap(
+            whats=whatskeep,
+            fnargs=['top_cit_%ss' % decade, 'raw'],
+            RANGE=None,
+            markers={x.ta: {decade + 10: "<"} for x in whatskeep},
+            markersize=30,
+            cmap=cmap,
+            cnt=cnt,
+            dtype=dtype,
+            ysum=ysum,
+            ify=ify,
+            database_name=database_name
+        )
 
-    plt.show()
+        plt.show()

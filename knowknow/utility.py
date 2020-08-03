@@ -8,6 +8,19 @@ import requests
 from logzero import logger
 
 
+def memoize(func):
+    cache = dict()
+
+    def memoized_func(*args):
+        if tuple(args) in cache:
+            return cache[tuple(args)]
+        result = func(*args)
+        cache[tuple(args)] = result
+        return result
+
+    return memoized_func
+
+
 def comb(x, y):
     """
     TODO: figure out
@@ -42,6 +55,7 @@ def make_cross_kwargs(*args, **kwargs):
     return my_named_tuple(**kwargs)
 
 
+@memoize
 def gen_tuple_template(keys: tuple):
     """
     :param keys: a tuple of strings
@@ -61,6 +75,19 @@ def make_cross(key___value: dict):
     return gen_tuple_template(tuple(sorted(key___value.keys())))(**key___value)
 
 
+@memoize
+def doit(k, keys: tuple):
+    if type(k) in [tuple, list]:
+        return make_cross(dict(zip(keys, k)))
+    elif len(keys) == 1:
+        # TODO: where this hack is used?
+        # logger.warning(f'DoIt function in named_tupelize uses len(1) hack. ctype: {ctype}, '
+        #                f'd: {d}, curr_key {k}')
+        return make_cross({keys[0]: k})
+    else:
+        raise Exception(f"Cannot transform {k} into a named tuple with keys {keys}")
+
+
 def named_tupelize(d: dict, ctype: str):
     """
     For each key in d, try making it a named tuple. Return {namedtuple(k, ctypes): v for k, v in dict)
@@ -68,20 +95,8 @@ def named_tupelize(d: dict, ctype: str):
     :param ctype: category types?
     :return:
     """
-    keys = sorted(ctype.split("."))
-
-    def doit(k):
-        if type(k) in [tuple, list]:
-            return make_cross(dict(zip(keys, k)))
-        elif len(keys) == 1:
-            # TODO: where this hack is used?
-            logger.warning(f'DoIt function in named_tupelize uses len(1) hack. ctype: {ctype}, '
-                           f'd: {d}, curr_key {k}')
-            return make_cross({keys[0]: k})
-        else:
-            raise Exception(f"Cannot transform {k} into a named tuple with keys {keys}")
-
-    return {doit(k): v for k, v in d.items()}
+    keyss = tuple(sorted(ctype.split(".")))
+    return {doit(k, keyss): v for k, v in d.items()}
 
 
 class VariableNotFound(Exception):
