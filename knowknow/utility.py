@@ -1,4 +1,6 @@
 """
+Utilities
+=======================================
 Functions that don't need state of knowknow engine.
 Mostly are meant to generate empty/autofilled data structures or for type transformation.
 """
