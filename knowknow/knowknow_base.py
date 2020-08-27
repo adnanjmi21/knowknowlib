@@ -22,6 +22,7 @@ class Constants:
 
 
 class KnowKnow:
+
     def __init__(self, NB_DIR=None, BASEDIR=None):
         self.NB_DIR = NB_DIR
         self.BASEDIR = BASEDIR

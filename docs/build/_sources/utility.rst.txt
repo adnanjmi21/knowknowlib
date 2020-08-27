@@ -1,6 +1,0 @@
-Utilies
-====================
-
-
-.. automodule:: knowknow.utility
-    :members:

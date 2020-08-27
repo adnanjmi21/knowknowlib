@@ -90,7 +90,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knowknow-archive-module">knowknow.archive module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#knowknow-knowknow-base-module">knowknow.knowknow_base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#knowknow-utility-module">knowknow.utility module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utility">knowknow.utility module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#utilities">Utilities</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
@@ -172,8 +175,82 @@
 <div class="section" id="knowknow-knowknow-base-module">
 <h2>knowknow.knowknow_base module<a class="headerlink" href="#knowknow-knowknow-base-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="knowknow-utility-module">
-<h2>knowknow.utility module<a class="headerlink" href="#knowknow-utility-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-utility">
+<span id="knowknow-utility-module"></span><h2>knowknow.utility module<a class="headerlink" href="#module-utility" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="utilities">
+<h3>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h3>
+<p>Functions that don’t need state of knowknow engine.
+Mostly are meant to generate empty/autofilled data structures or for type transformation.</p>
+<dl class="py exception">
+<dt id="utility.VariableNotFound">
+<em class="property">exception </em><code class="sig-prename descclassname">utility.</code><code class="sig-name descname">VariableNotFound</code><a class="headerlink" href="#utility.VariableNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utility.comb">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">comb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.comb" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: figure out
+:param x: . separated values
+:param y: . separated values
+:return: union of unique values from x and y. . separated
+‘q.w.e’, ‘e.r.t’ -&gt; ‘e.q.r.t.w’</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utility.doit">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">doit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.doit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="utility.download_file">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">download_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">outfn</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.download_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="utility.gen_tuple_template">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">gen_tuple_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.gen_tuple_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="utility.make_cross">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">make_cross</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key___value</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.make_cross" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key___value</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<p>{‘1’: ‘q’, ‘2’: ‘w’, ‘3’: ‘e’} -&gt; e_q_w(e=’3’, q=’1’, w=’2’)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utility.make_cross_kwargs">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">make_cross_kwargs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.make_cross_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks like it turns a dictionary into a named tuple.
+TODO: get rid of kwargs logic. Why generating a named tuple is named cross?
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utility.memoize">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">memoize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.memoize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="utility.named_tupelize">
+<code class="sig-prename descclassname">utility.</code><code class="sig-name descname">named_tupelize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">dict</span></em>, <em class="sig-param"><span class="n">ctype</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility.named_tupelize" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each key in d, try making it a named tuple. Return {namedtuple(k, ctypes): v for k, v in dict)
+:param d:
+:param ctype: category types?
+:return:</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="module-contents">
 <h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>

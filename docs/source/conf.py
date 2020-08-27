@@ -40,6 +40,8 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
+    "sphinx.ext.napoleon",
+
     "recommonmark",
     "sphinx_rtd_theme",
 ]
